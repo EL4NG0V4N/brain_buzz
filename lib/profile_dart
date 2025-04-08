@@ -1,0 +1,214 @@
+import 'package:flutter/material.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'setting.dart';
+class ProfileScreen extends StatelessWidget {
+  final achievements = [
+    {
+      'title': 'Streak Specialist',
+      'description': 'Reach a 3-day streak',
+      'progress': 0.3,
+      'goal': '0/3',
+      'icon': Icons.calendar_today,
+    },
+    {
+      'title': 'Training Buff',
+      'description': 'Complete 5 Workouts',
+      'progress': 0.1,
+      'goal': '0/5',
+      'icon': Icons.fitness_center,
+    },
+    {
+      'title': 'Diligent Player',
+      'description': 'Train for 30 minutes',
+      'progress': 0.0,
+      'goal': '0/30',
+      'icon': Icons.timer,
+    },
+    {
+      'title': 'Accurate Player',
+      'description': 'Finish 10 Excellent games',
+      'progress': 0.0,
+      'goal': '0/10',
+      'icon': Icons.star_border,
+    },
+    {
+      'title': 'Consistency King',
+      'description': 'Login 7 days in a row',
+      'progress': 0.0,
+      'goal': '0/7',
+      'icon': Icons.event_repeat,
+    },
+    {
+      'title': 'Early Riser',
+      'description': 'Train before 8 AM for 5 days',
+      'progress': 0.0,
+      'goal': '0/5',
+      'icon': Icons.wb_sunny,
+    },
+    {
+      'title': 'Mind Master',
+      'description': 'Score 100% in a game',
+      'progress': 0.0,
+      'goal': '0/1',
+      'icon': Icons.psychology_alt,
+    },
+    {
+      'title': 'Speed Demon',
+      'description': 'Finish a game in under 1 min',
+      'progress': 0.0,
+      'goal': '0/1',
+      'icon': Icons.speed,
+    },
+    {
+      'title': 'Brain Builder',
+      'description': 'Play 10 brain games',
+      'progress': 0.0,
+      'goal': '0/10',
+      'icon': Icons.memory,
+    },
+    {
+      'title': 'Champion',
+      'description': 'Unlock all achievements',
+      'progress': 0.0,
+      'goal': '0/10',
+      'icon': Icons.emoji_events,
+    },
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        elevation: 0,
+        centerTitle: true,
+        title: Text(
+          'Profile',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Colors.cyanAccent,
+          ),
+        ),
+        actions: [IconButton(onPressed: () {
+           Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SettingsScreen(),
+                          ),
+                        );
+        }, icon: Icon(Icons.settings))],
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildStatsSection(),
+            const SizedBox(height: 30),
+            Text("Achievements",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.white)),
+            const SizedBox(height: 12),
+            ...achievements.map((a) => _buildAchievementCard(a)).toList(),
+            const SizedBox(height: 20),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatsSection() {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Colors.grey[850]!, Colors.grey[900]!],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [BoxShadow(color: Colors.black45, blurRadius: 10)],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _buildStatBox("Current Streak", "0 days"),
+          _buildStatBox("Workouts", "0 days"),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatBox(String title, String value) {
+    return Column(
+      children: [
+        Text(value,
+            style: TextStyle(color: Colors.cyanAccent, fontSize: 22, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 4),
+        Text(title, style: TextStyle(color: Colors.white70, fontSize: 12)),
+      ],
+    );
+  }
+
+  Widget _buildAchievementCard(Map achievement) {
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 200),
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.grey[900],
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(color: Colors.cyan.withOpacity(0.1), blurRadius: 8, offset: Offset(0, 2)),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                boxShadow: [BoxShadow(color: Colors.cyanAccent, blurRadius: 12)],
+              ),
+              child: CircleAvatar(
+                backgroundColor: Colors.cyan,
+                radius: 24,
+                child: Icon(achievement['icon'], color: Colors.white),
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(achievement['title'],
+                      style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600)),
+                  const SizedBox(height: 4),
+                  Text(achievement['description'],
+                      style: TextStyle(color: Colors.white70, fontSize: 13)),
+                  const SizedBox(height: 8),
+                  LinearPercentIndicator(
+                    lineHeight: 8,
+                    percent: achievement['progress'],
+                    backgroundColor: Colors.white12,
+                    progressColor: Colors.cyanAccent,
+                    barRadius: Radius.circular(4),
+                    animation: true,
+                    animationDuration: 500,
+                  ),
+                  const SizedBox(height: 4),
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: Text(achievement['goal'],
+                        style: TextStyle(color: Colors.white60, fontSize: 12)),
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
