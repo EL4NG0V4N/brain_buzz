@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="brain_buzz_"
+        android:label="Brain Buzz"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
