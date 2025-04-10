@@ -1,5 +1,11 @@
+import 'package:brain_buzz_/G1/m1.dart';
+import 'package:brain_buzz_/G1/m2.dart';
+import 'package:brain_buzz_/G1/m3.dart';
+import 'package:brain_buzz_/G1/m4.dart';
+import 'package:brain_buzz_/G1/m5.dart';
+import 'package:brain_buzz_/G1/m6.dart';
+import 'package:brain_buzz_/speaking.dart'; // YouTubeLinksPlayer() screen
 import 'package:flutter/material.dart';
-import 'game_detail_screen.dart'; // Ensure this file exists
 
 class GamesScreen extends StatefulWidget {
   @override
@@ -20,10 +26,20 @@ class _GamesScreenState extends State<GamesScreen> {
 
   final Map<String, List<String>> gameMap = {
     'Writing': ['Brevity', 'Commas', 'Detail', 'Grammar Fix'],
-    'Speaking': ['Pronunciation', 'Fluency', 'Tone Match', 'Echo Game'],
+    // 'Speaking': ['Speaking Videos'], // no need to include speaking tiles
     'Reading': ['Skimming', 'Scanning', 'Inference', 'Speed Read'],
     'Memory': ['Card Match', 'Pattern Memory', 'Tile Flip', 'Simon Says'],
     'Math': ['Quick Add', 'Times Table', 'Number Rush', 'Puzzle Math'],
+  };
+
+  final Map<String, WidgetBuilder> gameRoutes = {
+    'Brevity': (_) => HomePage(),
+    'Commas': (_) => PuzzleApp(),
+    'Detail': (_) => MemoryGameScreen(),
+    'Grammar Fix': (_) => SokobanGame(levelIndex: 0),
+    'Skimming': (_) => NumberGameApp(),
+    //'Scanning': (_) => NumberPuzzleGame(),
+    // No need to add Speaking tile route here
   };
 
   @override
@@ -36,7 +52,6 @@ class _GamesScreenState extends State<GamesScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Title
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Text(
@@ -48,8 +63,6 @@ class _GamesScreenState extends State<GamesScreen> {
                 ),
               ),
             ),
-
-            // Toggle switch
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
@@ -71,8 +84,6 @@ class _GamesScreenState extends State<GamesScreen> {
                 ],
               ),
             ),
-
-            // Category Chips
             Container(
               height: 40,
               margin: EdgeInsets.symmetric(vertical: 10),
@@ -88,9 +99,18 @@ class _GamesScreenState extends State<GamesScreen> {
                       label: Text(cat),
                       selected: isSelected,
                       onSelected: (_) {
-                        setState(() {
-                          selectedCategory = cat;
-                        });
+                        if (cat == 'Speaking') {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => YouTubeLinksPlayer(),
+                            ),
+                          );
+                        } else {
+                          setState(() {
+                            selectedCategory = cat;
+                          });
+                        }
                       },
                       selectedColor: Colors.white,
                       labelStyle: TextStyle(
@@ -102,15 +122,13 @@ class _GamesScreenState extends State<GamesScreen> {
                 },
               ),
             ),
-
-            // Game Grid (2 columns, 4 total boxes)
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: GridView.builder(
                   itemCount: currentGames.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, // 2 boxes per row
+                    crossAxisCount: 2,
                     crossAxisSpacing: 12,
                     mainAxisSpacing: 12,
                   ),
@@ -118,12 +136,21 @@ class _GamesScreenState extends State<GamesScreen> {
                     final title = currentGames[index];
                     return InkWell(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => GameDetailScreen(gameTitle: title),
-                          ),
-                        );
+                        final builder = gameRoutes[title];
+                        if (builder != null) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: builder),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'Game "$title" not implemented yet',
+                              ),
+                            ),
+                          );
+                        }
                       },
                       borderRadius: BorderRadius.circular(12),
                       child: Container(
