@@ -1,3 +1,5 @@
+import 'package:brain_buzz_/G1/m1.dart';
+import 'package:brain_buzz_/home.dart';
 import 'package:brain_buzz_/profile_dart';
 import 'package:flutter/material.dart';
 import 'game.dart'; // Make sure this import path matches your project structure
@@ -25,7 +27,7 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
   int _selectedIndex = 0;
 
   final List<Widget> _screens = [
-    Center(child: Text('Today', style: TextStyle(fontSize: 24))),
+    RecommendationApp(),
     Center(child: Text('Performance', style: TextStyle(fontSize: 24))),
     GamesScreen(), // Replace placeholder with actual screen
     Center(child: Text('Notifications', style: TextStyle(fontSize: 24))),
